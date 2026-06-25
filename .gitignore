@@ -2,7 +2,7 @@ tmp
 .env
 .envrc
 bin/
-
+vendor
 # Logs
 logs
 *.log
