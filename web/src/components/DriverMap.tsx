@@ -31,9 +31,7 @@ const startLocationMarker = new L.Icon({
 });
 
 const destinationMarker = new L.Icon({
-  iconUrl: "data:image/svg+xml;utf8," + encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#e11d48" stroke="#fff" stroke-width="1.5"><path d="M12 2C7.6 2 4 5.6 4 10c0 5.5 7.3 11.5 7.6 11.7.2.2.6.2.8 0C12.7 21.5 20 15.5 20 10c0-4.4-3.6-8-8-8zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/></svg>`
-  ),
+  iconUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Map_pin_icon.svg/176px-Map_pin_icon.svg.png",
   iconSize: [40, 40], // Size of the marker
   iconAnchor: [20, 40], // Anchor point
 });
@@ -44,8 +42,8 @@ export const DriverMap = ({ packageSlug }: { packageSlug: CarPackageSlug }) => {
   const [riderLocation, setRiderLocation] = useState<Coordinate>(START_LOCATION)
 
   const driverGeohash = useMemo(() =>
-    Geohash.encode(riderLocation?.latitude, riderLocation?.longitude, 7)
-    , [riderLocation?.latitude, riderLocation?.longitude]);
+          Geohash.encode(riderLocation?.latitude, riderLocation?.longitude, 7)
+      , [riderLocation?.latitude, riderLocation?.longitude]);
 
   const {
     error,
@@ -108,18 +106,18 @@ export const DriverMap = ({ packageSlug }: { packageSlug: CarPackageSlug }) => {
   }
 
   const parsedRoute = useMemo(() =>
-    requestedTrip?.route?.geometry[0]?.coordinates
-      .map((coord) => [coord?.longitude, coord?.latitude] as [number, number])
-    , [requestedTrip])
+          requestedTrip?.route?.geometry[0]?.coordinates
+              .map((coord) => [coord?.longitude, coord?.latitude] as [number, number])
+      , [requestedTrip])
 
   // destination is the last coordinate in the route
   const destination = useMemo(() =>
-    requestedTrip?.route?.geometry[0]?.coordinates[requestedTrip?.route?.geometry[0]?.coordinates?.length - 1]
-    , [requestedTrip])
+          requestedTrip?.route?.geometry[0]?.coordinates[requestedTrip?.route?.geometry[0]?.coordinates?.length - 1]
+      , [requestedTrip])
   // start location is the first coordinate in the route
   const startLocation = useMemo(() =>
-    requestedTrip?.route?.geometry[0]?.coordinates[0]
-    , [requestedTrip])
+          requestedTrip?.route?.geometry[0]?.coordinates[0]
+      , [requestedTrip])
 
 
   if (error) {
@@ -127,64 +125,64 @@ export const DriverMap = ({ packageSlug }: { packageSlug: CarPackageSlug }) => {
   }
 
   return (
-    <div className="relative flex flex-col md:flex-row h-screen">
-      <div className="flex-1">
-        <MapContainer
-          center={[riderLocation.latitude, riderLocation.longitude]}
-          zoom={13}
-          style={{ height: '100%', width: '100%' }}
-          ref={mapRef}
-        >
-          <TileLayer
-            url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-            attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/'>CARTO</a>"
-          />
-
-          <Marker
-            key={userID}
-            position={[riderLocation.latitude, riderLocation.longitude]}
-            icon={driverMarker}
+      <div className="relative flex flex-col md:flex-row h-screen">
+        <div className="flex-1">
+          <MapContainer
+              center={[riderLocation.latitude, riderLocation.longitude]}
+              zoom={13}
+              style={{ height: '100%', width: '100%' }}
+              ref={mapRef}
           >
-            <Popup>
-              Driver ID: {userID}
-              <br />
-              Geohash: {driverGeohash}
-            </Popup>
-          </Marker>
+            <TileLayer
+                url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+                attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors &copy; <a href='https://carto.com/'>CARTO</a>"
+            />
 
-          {startLocation && (
-            <Marker position={[startLocation.longitude, startLocation.latitude]} icon={startLocationMarker}>
-              <Popup>Start Location</Popup>
+            <Marker
+                key={userID}
+                position={[riderLocation.latitude, riderLocation.longitude]}
+                icon={driverMarker}
+            >
+              <Popup>
+                Driver ID: {userID}
+                <br />
+                Geohash: {driverGeohash}
+              </Popup>
             </Marker>
-          )}
 
-          {destination && (
-            <Marker position={[destination.longitude, destination.latitude]} icon={destinationMarker}>
-              <Popup>Destination</Popup>
-            </Marker>
-          )}
+            {startLocation && (
+                <Marker position={[startLocation.longitude, startLocation.latitude]} icon={startLocationMarker}>
+                  <Popup>Start Location</Popup>
+                </Marker>
+            )}
 
-          {parsedRoute && (
-            <RoutingControl route={parsedRoute} />
-          )}
+            {destination && (
+                <Marker position={[destination.longitude, destination.latitude]} icon={destinationMarker}>
+                  <Popup>Destination</Popup>
+                </Marker>
+            )}
 
-          <MapClickHandler onClick={handleMapClick} />
-        </MapContainer>
-      </div>
+            {parsedRoute && (
+                <RoutingControl route={parsedRoute} />
+            )}
 
-      <div className="flex flex-col md:w-[400px] bg-white border-t md:border-t-0 md:border-l">
-        <div className="p-4 border-b">
-          <DriverCard driver={driver} packageSlug={packageSlug} />
+            <MapClickHandler onClick={handleMapClick} />
+          </MapContainer>
         </div>
-        <div className="flex-1 overflow-y-auto">
-          <DriverTripOverview
-            trip={requestedTrip}
-            status={tripStatus}
-            onAcceptTrip={handleAcceptTrip}
-            onDeclineTrip={handleDeclineTrip}
-          />
+
+        <div className="flex flex-col md:w-[400px] bg-white border-t md:border-t-0 md:border-l">
+          <div className="p-4 border-b">
+            <DriverCard driver={driver} packageSlug={packageSlug} />
+          </div>
+          <div className="flex-1 overflow-y-auto">
+            <DriverTripOverview
+                trip={requestedTrip}
+                status={tripStatus}
+                onAcceptTrip={handleAcceptTrip}
+                onDeclineTrip={handleDeclineTrip}
+            />
+          </div>
         </div>
       </div>
-    </div>
   )
 }
