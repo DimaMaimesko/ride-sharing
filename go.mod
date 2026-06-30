@@ -6,6 +6,7 @@ require go.mongodb.org/mongo-driver v1.13.1
 
 require (
 	github.com/gorilla/websocket v1.5.3
+	github.com/mmcloughlin/geohash v0.10.0
 	google.golang.org/grpc v1.81.1
 	google.golang.org/protobuf v1.36.11
 )
